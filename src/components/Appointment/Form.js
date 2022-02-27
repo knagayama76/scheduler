@@ -48,22 +48,3 @@ export default function Form(props) {
     </main>
   );
 }
-
-// .add("Create", () => (
-//   <Form
-//     interviwers={interviewers}
-//     onSave={action("onSave")}
-//     onCancel={action("onCancel")}
-//   />
-// ));
-
-// .add("Edit", () => (
-//   <Form
-//     id={3}
-//     student={"Kaoru Nagayama"}
-//     interviewer={interviewer}
-//     interviewers={interviewers}
-//     onSave={action("onSave")}
-//     onCancel={action("onCancel")}
-//   />
-// ))
