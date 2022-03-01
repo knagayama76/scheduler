@@ -31,14 +31,29 @@ export default function Application(props) {
         appointments: all[1].data,
         interviewers: all[2].data,
       }));
-    }, []);
-  });
+    });
+  }, []);
 
   useEffect(() => {
     setDailyAppointments(getAppointmentsForDay(state, state.day));
   }, [state]);
 
   const setDay = (day) => setState({ ...state, day });
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview },
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    console.log("APPOINTMENT", appointment);
+
+    setState({ ...state, appointments });
+  }
 
   return (
     <main className="layout">
@@ -69,6 +84,7 @@ export default function Application(props) {
               time={appointment.time}
               interviewers={interviewers}
               interview={appointment.interview}
+              bookInterview={bookInterview}
             />
           );
         })}

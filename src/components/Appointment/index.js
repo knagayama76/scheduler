@@ -16,6 +16,29 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
+  const save = (name, interviewer) => {
+    const interview = {
+      student: name,
+      interviewer,
+    };
+    console.log(
+      "NAME",
+      name,
+      "INTERVIEWER",
+      interviewer,
+      "INTERWIEW",
+      interview
+    );
+
+    props.bookInterview(props.id, interview);
+    transition(SHOW);
+  };
+
+  //   Before we can test that the state is changed locally, we need to have the Appointment component transition to the SHOW mode.
+
+  // Within the save function in our Appointment component transition to the SHOW mode after calling props.bookInterview.
+  console.log("PROPS", props.interview);
+
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -28,7 +51,11 @@ export default function Appointment(props) {
         />
       )}
       {mode === CREATE && (
-        <Form interviewers={props.interviewers} onCancel={() => back()} />
+        <Form
+          interviewers={props.interviewers}
+          onCancel={() => back()}
+          onSave={save}
+        />
       )}
       {mode === SHOW && (
         <Show
@@ -39,12 +66,3 @@ export default function Appointment(props) {
     </article>
   );
 }
-
-// The Form Component
-// When the mode === CREATE we want to show the Form component.
-
-// Update the Appointment component with the appropriate conditional logic to handle the transition to CREATE.
-
-// We haven't properly implemented the getInterviewersForDay selector yet and the Form component requires a list of interviewers, so for now we'll need a workaround.
-
-// Set the interviewers prop to an empty array. We will implement this properly in a future activity.
