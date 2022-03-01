@@ -6,11 +6,16 @@ import Header from "./Header";
 import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
+import Status from "./Status";
+import Confirm from "./Confirm";
 
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
   const SHOW = "SHOW";
   const CREATE = "CREATE";
+  const SAVING = "SAVING";
+  const CONFIRM = "CONFIRM";
+  const DELETING = "DELETING";
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -21,23 +26,24 @@ export default function Appointment(props) {
       student: name,
       interviewer,
     };
-    console.log(
-      "NAME",
-      name,
-      "INTERVIEWER",
-      interviewer,
-      "INTERWIEW",
-      interview
-    );
 
-    props.bookInterview(props.id, interview);
-    transition(SHOW);
+    transition(SAVING);
+
+    props.bookInterview(props.id, interview).then(() => {
+      transition(SHOW);
+    });
   };
 
-  //   Before we can test that the state is changed locally, we need to have the Appointment component transition to the SHOW mode.
+  const cancel = (id) => {
+    transition(DELETING);
+    props.cancelInterview(props.id).then(() => {
+      transition(EMPTY);
+    });
+  };
 
-  // Within the save function in our Appointment component transition to the SHOW mode after calling props.bookInterview.
-  console.log("PROPS", props.interview);
+  const confirm = () => {
+    transition(CONFIRM);
+  };
 
   return (
     <article className="appointment">
@@ -57,10 +63,21 @@ export default function Appointment(props) {
           onSave={save}
         />
       )}
+      {mode === SAVING && <Status message="Saving" />}
+      {mode === CONFIRM && (
+        <Confirm
+          message="Are you sure you would like to delete?"
+          onCancel={() => back()}
+          onConfirm={cancel}
+        />
+      )}
+      {mode === DELETING && <Status message="Deleting" />}
       {mode === SHOW && (
         <Show
+          id={props.id}
           student={props.interview.student}
           interviewer={props.interview.interviewer}
+          onDelete={confirm}
         />
       )}
     </article>

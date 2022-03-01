@@ -50,10 +50,27 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment,
     };
-    console.log("APPOINTMENT", appointment);
-
-    setState({ ...state, appointments });
+    // console.log("APPOINTMENT", appointment)
+    // setState({ ...state, appointments });
+    // console.log("INTERVIEW", interview);
+    return axios
+      .put(`/api/appointments/${id}`, { interview })
+      .then((res) => setState({ ...state, appointments }))
+      .catch((err) => console.log(err));
   }
+
+  const cancelInterview = (id) => {
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then((res) => setState({ ...state }))
+      .catch((err) => console.log(err));
+  };
+
+  //   If we break this down into steps similar to our previous activity, we should start by creating the main cancelInterview function in Application.js, that will use the appointment id to find the right appointment slot and set it's interview data to null.
+
+  // Add the rest of the local and remote delete behaviour to the Appointment component.
+
+  // After we delete an interview, it will need to have its value set to null. If we are still in the SHOW mode and the interview isn't set to null, we may get a TypeError.
 
   return (
     <main className="layout">
@@ -83,8 +100,9 @@ export default function Application(props) {
               id={appointment.id}
               time={appointment.time}
               interviewers={interviewers}
-              interview={appointment.interview}
+              interview={getInterview(state, appointment.interview)}
               bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
             />
           );
         })}
