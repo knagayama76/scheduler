@@ -32,11 +32,11 @@ export default function useApplicationData() {
     const currentDay = state.days.find((dayObj) =>
       dayObj.appointments.includes(appointmentId)
     );
-    console.log("CURRENT DAY", currentDay);
+    // console.log("CURRENT DAY", currentDay);
     const nullAppointments = currentDay.appointments.filter(
       (id) => !state.appointments[id].interview
     );
-    console.log("NULL", nullAppointments);
+    // console.log("NULL", nullAppointments);
 
     const spots = nullAppointments.length;
 
@@ -44,7 +44,7 @@ export default function useApplicationData() {
       ...currentDay,
       spots,
     };
-    console.log("MODIFIED", modifiedNewDay);
+    // console.log("MODIFIED", modifiedNewDay);
     const newDaysArray1 = [];
     state.days.forEach((dayObj) => {
       if (state.day === dayObj.name) {
@@ -53,7 +53,7 @@ export default function useApplicationData() {
         newDaysArray1.push(dayObj);
       }
     });
-    console.log("NEW!", newDaysArray1);
+    // console.log("NEW!", newDaysArray1);
 
     // const newDaysArray2 = state.days.map((dayObj) => {
     //   if (state.day === dayObj.name) {
@@ -94,7 +94,7 @@ export default function useApplicationData() {
       updateSpot(newState, id);
     });
   }
-  console.log("STATE", state);
+  // console.log("STATE", state);
 
   const cancelInterview = (id) => {
     const appointment = {
@@ -107,9 +107,15 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then((res) => setState((prev) => ({ ...prev, appointments })));
+    const newState = {
+      ...state,
+      appointments,
+    };
+
+    return axios.delete(`/api/appointments/${id}`).then((res) => {
+      setState((prev) => ({ ...prev, appointments }));
+      updateSpot(newState, id);
+    });
   };
 
   return {
