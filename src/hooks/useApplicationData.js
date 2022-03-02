@@ -26,6 +26,53 @@ export default function useApplicationData() {
 
   const setDay = (day) => setState({ ...state, day });
 
+  // appointment ID = 3
+  const updateSpot = (state, appointmentId) => {
+    // find the current day
+    const currentDay = state.days.find((dayObj) =>
+      dayObj.appointments.includes(appointmentId)
+    );
+    console.log("CURRENT DAY", currentDay);
+    const nullAppointments = currentDay.appointments.filter(
+      (id) => !state.appointments[id].interview
+    );
+    console.log("NULL", nullAppointments);
+
+    const spots = nullAppointments.length;
+
+    const modifiedNewDay = {
+      ...currentDay,
+      spots,
+    };
+    console.log("MODIFIED", modifiedNewDay);
+    const newDaysArray1 = [];
+    state.days.forEach((dayObj) => {
+      if (state.day === dayObj.name) {
+        newDaysArray1.push(modifiedNewDay);
+      } else {
+        newDaysArray1.push(dayObj);
+      }
+    });
+    console.log("NEW!", newDaysArray1);
+
+    // const newDaysArray2 = state.days.map((dayObj) => {
+    //   if (state.day === dayObj.name) {
+    //     return modifiedNewDay;
+    //   } else {
+    //     return dayObj;
+    //   }
+    // });
+
+    const newDaysArray3 = state.days.map((dayObj) =>
+      state.day === dayObj.name ? modifiedNewDay : dayObj
+    );
+
+    setState({
+      ...state,
+      days: newDaysArray3,
+    });
+  };
+
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -37,10 +84,17 @@ export default function useApplicationData() {
       [id]: appointment,
     };
 
-    return axios
-      .put(`/api/appointments/${id}`, { interview })
-      .then((res) => setState({ ...state, appointments }));
+    const newState = {
+      ...state,
+      appointments,
+    };
+
+    return axios.put(`/api/appointments/${id}`, { interview }).then((res) => {
+      setState({ ...state, appointments });
+      updateSpot(newState, id);
+    });
   }
+  console.log("STATE", state);
 
   const cancelInterview = (id) => {
     const appointment = {
