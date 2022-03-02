@@ -8,6 +8,7 @@ import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 
 export default function Appointment(props) {
   const EMPTY = "EMPTY";
@@ -17,6 +18,12 @@ export default function Appointment(props) {
   const CONFIRM = "CONFIRM";
   const DELETING = "DELETING";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
+
+  //   We did not define the ERROR_SAVE and ERROR_DELETE modes in the diagram describing the possible transitions.
+
+  // Add the constants for the the error modes and transition to them when axios rejects the Promise in our save and destroy functions.
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
@@ -30,16 +37,18 @@ export default function Appointment(props) {
 
     transition(SAVING);
 
-    props.bookInterview(props.id, interview).then(() => {
-      transition(SHOW);
-    });
+    props
+      .bookInterview(props.id, interview)
+      .then(() => transition(SHOW))
+      .catch((error) => transition(ERROR_SAVE, true));
   };
 
   const cancel = (id) => {
-    transition(DELETING);
-    props.cancelInterview(props.id).then(() => {
-      transition(EMPTY);
-    });
+    transition(DELETING, true);
+    props
+      .cancelInterview(props.id)
+      .then(() => transition(EMPTY))
+      .catch((error) => transition(ERROR_DELETE, true));
   };
 
   const confirm = () => {
@@ -48,6 +57,14 @@ export default function Appointment(props) {
 
   const edit = () => {
     transition(EDIT);
+  };
+
+  const closeSave = () => {
+    transition(EMPTY);
+  };
+
+  const closeDelete = () => {
+    transition(SHOW);
   };
 
   return (
@@ -86,6 +103,12 @@ export default function Appointment(props) {
         />
       )}
       {mode === DELETING && <Status message="Deleting" />}
+      {mode === ERROR_SAVE && (
+        <Error message="Could not make appointment" onClose={closeSave} />
+      )}
+      {mode === ERROR_DELETE && (
+        <Error message="Could not cancel appointment" onClose={closeDelete} />
+      )}
       {mode === SHOW && (
         <Show
           id={props.id}
