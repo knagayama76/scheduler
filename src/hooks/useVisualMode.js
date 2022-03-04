@@ -1,4 +1,3 @@
-import { update } from "lodash";
 import { useState } from "react";
 
 export default function useVisualMode(initial) {

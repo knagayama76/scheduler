@@ -32,11 +32,11 @@ export default function useApplicationData() {
     const currentDay = state.days.find((dayObj) =>
       dayObj.appointments.includes(appointmentId)
     );
-    // console.log("CURRENT DAY", currentDay);
+    
     const nullAppointments = currentDay.appointments.filter(
       (id) => !state.appointments[id].interview
     );
-    // console.log("NULL", nullAppointments);
+    
 
     const spots = nullAppointments.length;
 
@@ -44,7 +44,7 @@ export default function useApplicationData() {
       ...currentDay,
       spots,
     };
-    // console.log("MODIFIED", modifiedNewDay);
+    
     const newDaysArray1 = [];
     state.days.forEach((dayObj) => {
       if (state.day === dayObj.name) {
@@ -53,7 +53,7 @@ export default function useApplicationData() {
         newDaysArray1.push(dayObj);
       }
     });
-    // console.log("NEW!", newDaysArray1);
+    
 
     // const newDaysArray2 = state.days.map((dayObj) => {
     //   if (state.day === dayObj.name) {
@@ -125,12 +125,3 @@ export default function useApplicationData() {
     cancelInterview,
   };
 }
-
-// Create a new file hooks/useApplicationData.js and move the logic used to manage the state from the components/Application.js into it.
-
-// Our useApplicationData Hook will return an object with four keys.
-
-// The state object will maintain the same structure.
-// The setDay action can be used to set the current day.
-// The bookInterview action makes an HTTP request and updates the local state.
-// The cancelInterview action makes an HTTP request and updates the local state.

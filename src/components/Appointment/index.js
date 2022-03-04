@@ -21,10 +21,6 @@ export default function Appointment(props) {
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
 
-  //   We did not define the ERROR_SAVE and ERROR_DELETE modes in the diagram describing the possible transitions.
-
-  // Add the constants for the the error modes and transition to them when axios rejects the Promise in our save and destroy functions.
-
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
