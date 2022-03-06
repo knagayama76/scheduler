@@ -56,7 +56,7 @@ export default function Appointment(props) {
   };
 
   const closeSave = () => {
-    transition(EMPTY);
+    transition(EDIT);
   };
 
   const closeDelete = () => {
