@@ -29,22 +29,14 @@ describe("Form", () => {
     expect(getByTestId("student-name-input")).toHaveValue("Lydia Miller-Jones");
   });
 
-  // The first test will still fail until we implement this feature, since the Form component doesn't show an error yet. The second test should pass since it will not find the error text, but it calls the onSave function with the correct arguments. The second test provides a safeguard that allows us to confirm that the button continues to work as expected.
-
-  //   To perform the "calls onSave function when the name is defined" test, we need to click the save button with a valid name in the input element. The easiest way to include a name by default in the Form component is to pass it as a student prop. This way we only need to press click the Save button for the validation to occur.
-
-  // When the fourth test passes and the third test fails with the message Unable to find an element with the text: /student name cannot be blank/i. paste the two tests to compare a solution.
-
   it("validates that the student name is not blank", () => {
-    /* 1. Create the mock onSave function */
     const onSave = jest.fn();
 
-    /* 2. Render the Form with interviewers and the onSave mock function passed as an onSave prop, the student prop should be blank or undefined */
     const { getByText } = render(
       <Form interviewers={interviewers} onSave={onSave} />
     );
 
-    /* 3. Click the save button */
+   
     fireEvent.click(getByText("Save"));
 
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
@@ -52,10 +44,9 @@ describe("Form", () => {
   });
 
   xit("calls onSave function when the name is defined", () => {
-    /* 1. Create the mock onSave function */
+    
     const onSave = jest.fn();
 
-    /* 2. Render the Form with interviewers, name and the onSave mock function passed as an onSave prop */
     const { getByText, queryByText } = render(
       <Form
         interviewers={interviewers}
@@ -64,7 +55,6 @@ describe("Form", () => {
       />
     );
 
-    /* 3. Click the save button */
     fireEvent.click(getByText("Save"));
 
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
