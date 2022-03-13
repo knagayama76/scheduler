@@ -6,6 +6,8 @@ Screenshots are prvided in the doc directory.
 ## Setup
 
 Install dependencies with `npm install`.
+Also, the app doesn't work with the latest version of Node.js.
+`nvm use v15.14.0` to change the version
 
 ## Running Webpack Development Server
 
